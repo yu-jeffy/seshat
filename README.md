@@ -15,6 +15,9 @@ pip install -r requirements.txt
 ```
 
 ## Usage Instructions
+
+Bitcoin Core is required to use this tool. Install here: [https://bitcoin.org/en/bitcoin-core/](https://bitcoin.org/en/bitcoin-core/)
+
 To use the Seshat tool, follow these steps:
 
 1. Start `main.py` in your terminal or command prompt.
