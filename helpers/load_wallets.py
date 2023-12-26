@@ -1,8 +1,9 @@
 import requests
 import json
 
-def bitcoin_rpc(method, params=[], rpc_port="8332", rpc_username="rpcuser", rpc_password="rpcpassword"):
-    url = f"http://127.0.0.1:{rpc_port}/"
+def bitcoin_rpc(method, params=[], rpc_port="8332", rpc_username="rpcuser", rpc_password="rpcpassword", wallet=None):
+    # Include the wallet name in the URL if provided
+    url = f"http://127.0.0.1:{rpc_port}/" + (f"wallet/{wallet}" if wallet else "")
     headers = {'content-type': 'application/json'}
     payload = {
         "method": method,
@@ -18,7 +19,9 @@ def list_wallets(rpc_port, rpc_username, rpc_password):
     return response.get('result', [])
 
 def get_taproot_address(wallet_name, rpc_port, rpc_username, rpc_password):
-    response = bitcoin_rpc("getnewaddress", ["", "bech32m"], wallet=wallet_name, rpc_port=rpc_port, rpc_username=rpc_username, rpc_password=rpc_password)
+    response = bitcoin_rpc(method="getnewaddress", params=["", "bech32m"], rpc_port=rpc_port, rpc_username=rpc_username, rpc_password=rpc_password, wallet=wallet_name)
+    print(f"Generating new Taproot address for wallet '{wallet_name}'")
+    print(f"Generated address: {response.get('result')}")
     return response.get('result')
     
 def load_wallets(rpc_port, rpc_username, rpc_password):
@@ -57,4 +60,5 @@ def load_wallets(rpc_port, rpc_username, rpc_password):
     if not wallet2:
         print("Another wallet is needed for a second wallet.")
     
+    print("Wallet(s) loaded successfully.")
     return wallet1, wallet2

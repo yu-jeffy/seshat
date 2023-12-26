@@ -3,6 +3,9 @@ import json
 import sys
 from helpers.generate_wallets import generate_wallet
 from helpers.load_wallets import load_wallets
+from helpers.regtest_fund_wallet import fund_address
+from helpers.basic_inscription import create_inscription
+from helpers.basic_inscription_view import view_inscription
 
 # Global variables to keep track of RPC information and wallet details
 rpc_port = None
@@ -72,6 +75,28 @@ def get_rpc_credentials():
             print("Failed to connect with the provided RPC credentials. Please try again.")
             print()
 
+def is_regtest_active():
+    blockchain_info = bitcoin_rpc("getblockchaininfo")
+    return blockchain_info.get('result', {}).get('chain') == 'regtest'
+
+def fund_wallets():
+    if not is_regtest_active():
+        print("Regtest is not active. Funding wallets is only available in regtest mode.")
+        return
+    else:
+        print("Regtest is active. Funding wallets...")
+    
+    if wallet1['name'] is None or wallet2['name'] is None:
+        print("Wallets must be loaded before they can be funded.")
+        return
+    
+    # Fund wallet1
+    fund_address(wallet1['taproot_address'], rpc_port, rpc_username, rpc_password)
+    
+    # Fund wallet2 if it's set
+    if wallet2['name'] is not None:
+        fund_address(wallet2['taproot_address'], rpc_port, rpc_username, rpc_password)
+
 def show_menu():
     options = [
         "Create wallet",
@@ -112,11 +137,24 @@ def handle_option_selection():
                 wallet2['name'] = wallet2_info['name']
                 wallet2['taproot_address'] = wallet2_info['taproot_address']
         elif choice == 3:
-            print("Fund wallet (regtest) - under development")
+            fund_wallets()
         elif choice == 4:
-            print("Create simple inscription - under development")
+            if not wallet1['name']:
+                print("Please load a wallet first.")
+            else:
+                user_amount = float(input("Enter the transaction amount in BTC: "))
+                inscription_text = input("Enter the text you want to inscribe (max 80 bytes): ")
+                inscription_data = inscription_text.encode('utf-8')
+                if len(inscription_data) > 80:
+                    print("Error: Inscription text exceeds the 80-byte limit.")
+                else:
+                    inscription_data_hex = inscription_data.hex()
+                    txid = create_inscription(wallet1['name'], wallet1['taproot_address'], user_amount, inscription_data_hex, rpc_port, rpc_username, rpc_password)
+                    if txid:
+                        print(f"Transaction ID: {txid}")
         elif choice == 5:
-            print("View simple inscription - under development")
+            txid = input("Enter the transaction ID: ")
+            view_inscription(txid, rpc_port, rpc_username, rpc_password)
         elif choice == 6:
             print("Create taproot inscription - under development")
         elif choice == 7:
@@ -128,6 +166,8 @@ def main():
     welcome_message()
     get_rpc_credentials()
     handle_option_selection()
+
+
 
 if __name__ == "__main__":
     main()
