@@ -104,8 +104,8 @@ def show_menu():
         "Fund wallet (regtest)",
         "Create simple inscription",
         "View simple inscription",
-        "Create taproot inscription",
-        "View taproot inscription"
+        "Create taproot inscription // Under development",
+        "View taproot inscription // Under development"
     ]
     print("\nOptions Menu:")
     for i, option in enumerate(options, 1):

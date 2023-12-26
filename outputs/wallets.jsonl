@@ -1,3 +1,0 @@
-{"creation_result": {"result": {"name": "wallet1"}, "error": null, "id": 0}, "taproot_address": "bcrt1pugy2kwefar6nhthnw3n4wwm0dk6pft7l7gntk5458tlc5nrs89fqarwmgn"}
-{"creation_result": {"result": {"name": "wallet2"}, "error": null, "id": 0}, "taproot_address": "bcrt1ps3grgld76pek00d8y0tfdmrhv78jvwy2pxphccv9s30jaruwqxsslw80rh"}
-{"wallet_name": "test1", "creation_result": {"result": {"name": "test1"}, "error": null, "id": 0}, "taproot_address": "bcrt1puepxpsudc95ej30en4xfm40cfan988n69vdysmdqt546fjwrv2jsaze8yx"}
